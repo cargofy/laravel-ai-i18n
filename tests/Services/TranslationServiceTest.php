@@ -5,10 +5,8 @@ namespace Cargofy\LaravelAiI18n\Tests\Services;
 use Cargofy\LaravelAiI18n\Services\AbstractTranslationService;
 use Cargofy\LaravelAiI18n\Services\TranslationFileHandler;
 use Cargofy\LaravelAiI18n\Services\TranslationService;
-use Cargofy\LaravelAiI18n\Services\TranslationServiceFactory;
 use Illuminate\Support\Facades\Config;
 use Mockery;
-use Mockery\MockInterface;
 
 beforeEach(function () {
     // Configure test settings

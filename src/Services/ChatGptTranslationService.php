@@ -8,7 +8,9 @@ use Illuminate\Support\Facades\Log;
 class ChatGptTranslationService extends AbstractTranslationService
 {
     protected string $apiKey;
+
     protected string $model;
+
     protected float $temperature;
 
     public function __construct()
@@ -21,16 +23,17 @@ class ChatGptTranslationService extends AbstractTranslationService
     /**
      * Translate text from source language to target language
      *
-     * @param string $text Text to translate
-     * @param string $sourceLanguage Source language code
-     * @param string $targetLanguage Target language code
-     * @param string $format Format of the text (json, php, plain)
+     * @param  string  $text  Text to translate
+     * @param  string  $sourceLanguage  Source language code
+     * @param  string  $targetLanguage  Target language code
+     * @param  string  $format  Format of the text (json, php, plain)
      * @return string|null Translated text or null on failure
      */
     public function translate(string $text, string $sourceLanguage, string $targetLanguage, string $format = 'plain'): ?string
     {
         if (empty($this->apiKey)) {
             Log::error('ChatGPT API key is not set');
+
             return null;
         }
 
@@ -38,7 +41,7 @@ class ChatGptTranslationService extends AbstractTranslationService
             $prompt = $this->buildPrompt($text, $sourceLanguage, $targetLanguage, $format);
 
             $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $this->apiKey,
+                'Authorization' => 'Bearer '.$this->apiKey,
                 'Content-Type' => 'application/json',
             ])->post('https://api.openai.com/v1/chat/completions', [
                 'model' => $this->model,
@@ -57,13 +60,16 @@ class ChatGptTranslationService extends AbstractTranslationService
 
             if ($response->successful()) {
                 $result = $response->json('choices.0.message.content');
+
                 return $this->cleanResponse($result, $format);
             } else {
-                Log::error('ChatGPT API error: ' . $response->body());
+                Log::error('ChatGPT API error: '.$response->body());
+
                 return null;
             }
         } catch (\Exception $e) {
-            Log::error('ChatGPT translation error: ' . $e->getMessage());
+            Log::error('ChatGPT translation error: '.$e->getMessage());
+
             return null;
         }
     }
@@ -71,10 +77,10 @@ class ChatGptTranslationService extends AbstractTranslationService
     /**
      * Build prompt for the ChatGPT API
      *
-     * @param string $text Text to translate
-     * @param string $sourceLanguage Source language code
-     * @param string $targetLanguage Target language code
-     * @param string $format Format of the text
+     * @param  string  $text  Text to translate
+     * @param  string  $sourceLanguage  Source language code
+     * @param  string  $targetLanguage  Target language code
+     * @param  string  $format  Format of the text
      * @return string Prompt for the API
      */
     protected function buildPrompt(string $text, string $sourceLanguage, string $targetLanguage, string $format): string
@@ -82,7 +88,7 @@ class ChatGptTranslationService extends AbstractTranslationService
         $formatInstructions = match ($format) {
             'json' => "This is a JSON file. Maintain the exact JSON structure. Don't translate keys, only translate values. Keep all laravelAiI18ns like :laravelAiI18n, {laravelAiI18n}, etc. intact.",
             'php' => "This is a PHP array. Maintain the exact PHP array structure. Don't translate array keys, only translate values. Keep all laravelAiI18ns like :laravelAiI18n, {laravelAiI18n}, etc. intact.",
-            default => "Translate the text. Keep all laravelAiI18ns like :laravelAiI18n, {laravelAiI18n}, etc. intact.",
+            default => 'Translate the text. Keep all laravelAiI18ns like :laravelAiI18n, {laravelAiI18n}, etc. intact.',
         };
 
         return <<<PROMPT
@@ -97,8 +103,8 @@ PROMPT;
     /**
      * Clean the response from ChatGPT
      *
-     * @param string $response Response from ChatGPT
-     * @param string $format Format of the text
+     * @param  string  $response  Response from ChatGPT
+     * @param  string  $format  Format of the text
      * @return string Cleaned response
      */
     protected function cleanResponse(string $response, string $format): string

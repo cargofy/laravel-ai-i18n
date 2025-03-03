@@ -2,9 +2,9 @@
 
 namespace Cargofy\LaravelAiI18n\Tests;
 
+use Cargofy\LaravelAiI18n\LaravelAiI18nServiceProvider;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Orchestra\Testbench\TestCase as Orchestra;
-use Cargofy\LaravelAiI18n\LaravelAiI18nServiceProvider;
 
 class TestCase extends Orchestra
 {

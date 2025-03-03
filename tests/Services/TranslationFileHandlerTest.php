@@ -3,14 +3,14 @@
 namespace Cargofy\LaravelAiI18n\Tests\Services;
 
 use Cargofy\LaravelAiI18n\Services\TranslationFileHandler;
+use Exception;
 use Illuminate\Support\Facades\File;
 use Mockery;
 use ReflectionClass;
-use Exception;
 
 beforeEach(function () {
     // Create an instance of the class for testing
-    $this->handler = new TranslationFileHandler();
+    $this->handler = new TranslationFileHandler;
 });
 
 it('determines file format by extension', function () {
@@ -184,7 +184,7 @@ it('finds all translation files', function () {
 });
 
 it('checks if file path matches patterns', function () {
-    $handler = new TranslationFileHandler();
+    $handler = new TranslationFileHandler;
 
     // Use reflection to access protected method
     $reflection = new ReflectionClass($handler);
