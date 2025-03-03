@@ -1,24 +1,15 @@
-# :package_description
+# This is my package laravel-ai-i18n
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/:vendor_slug/:package_slug.svg?style=flat-square)](https://packagist.org/packages/:vendor_slug/:package_slug)
-[![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/:vendor_slug/:package_slug/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/:vendor_slug/:package_slug/actions?query=workflow%3Arun-tests+branch%3Amain)
-[![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/:vendor_slug/:package_slug/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/:vendor_slug/:package_slug/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
-[![Total Downloads](https://img.shields.io/packagist/dt/:vendor_slug/:package_slug.svg?style=flat-square)](https://packagist.org/packages/:vendor_slug/:package_slug)
-<!--delete-->
----
-This repo can be used to scaffold a Laravel package. Follow these steps to get started:
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/cargofy/laravel-ai-i18n.svg?style=flat-square)](https://packagist.org/packages/cargofy/laravel-ai-i18n)
+[![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/cargofy/laravel-ai-i18n/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/cargofy/laravel-ai-i18n/actions?query=workflow%3Arun-tests+branch%3Amain)
+[![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/cargofy/laravel-ai-i18n/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/cargofy/laravel-ai-i18n/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
+[![Total Downloads](https://img.shields.io/packagist/dt/cargofy/laravel-ai-i18n.svg?style=flat-square)](https://packagist.org/packages/cargofy/laravel-ai-i18n)
 
-1. Press the "Use this template" button at the top of this repo to create a new repo with the contents of this skeleton.
-2. Run "php ./configure.php" to run a script that will replace all placeholders throughout all the files.
-3. Have fun creating your package.
-4. If you need help creating a package, consider picking up our <a href="https://laravelpackage.training">Laravel Package Training</a> video course.
----
-<!--/delete-->
 This is where your description should go. Limit it to a paragraph or two. Consider adding a small example.
 
 ## Support us
 
-[<img src="https://github-ads.s3.eu-central-1.amazonaws.com/:package_name.jpg?t=1" width="419px" />](https://spatie.be/github-ad-click/:package_name)
+[<img src="https://github-ads.s3.eu-central-1.amazonaws.com/laravel-ai-i18n.jpg?t=1" width="419px" />](https://spatie.be/github-ad-click/laravel-ai-i18n)
 
 We invest a lot of resources into creating [best in class open source packages](https://spatie.be/open-source). You can support us by [buying one of our paid products](https://spatie.be/open-source/support-us).
 
@@ -29,41 +20,118 @@ We highly appreciate you sending us a postcard from your hometown, mentioning wh
 You can install the package via composer:
 
 ```bash
-composer require :vendor_slug/:package_slug
-```
-
-You can publish and run the migrations with:
-
-```bash
-php artisan vendor:publish --tag=":package_slug-migrations"
-php artisan migrate
+composer require cargofy/laravel-ai-i18n
 ```
 
 You can publish the config file with:
 
 ```bash
-php artisan vendor:publish --tag=":package_slug-config"
+php artisan vendor:publish --tag="laravel-ai-i18n-config"
 ```
 
 This is the contents of the published config file:
 
 ```php
 return [
+    // The driver to use for translation
+    'driver' => env('AI_TRANSLATION_DRIVER', 'chatgpt'),
+
+    // Available translation services
+    'services' => [
+        // ChatGPT translation service
+        'chatgpt' => [
+            'api_key' => env('OPENAI_API_KEY'),
+            'model' => env('OPENAI_MODEL', 'gpt-4o'),
+            'temperature' => env('OPENAI_TEMPERATURE', 0.3),
+        ],
+        
+        // You can add more services here in the future
+        // 'google' => [
+        //     'api_key' => env('GOOGLE_TRANSLATE_API_KEY'),
+        // ],
+    ],
+
+    // Language settings
+    'languages' => [
+        // The source language code (ISO 639-1)
+        'source' => 'en',
+        
+        // Target languages to translate to (array of ISO 639-1 codes)
+        'targets' => ['uk', 'de', 'fr', 'es'],
+    ],
+
+    // Paths configuration
+    'paths' => [
+        // Directories containing language files to translate
+        'lang_dirs' => [
+            'lang',
+            'resources/lang',
+        ],
+        
+        // File patterns to include in translation
+        'include_patterns' => [
+            '*.json',
+            '*.php',
+        ],
+        
+        // File patterns to exclude from translation
+        'exclude_patterns' => [
+            'vendor/**',
+            'node_modules/**',
+        ],
+    ],
 ];
-```
-
-Optionally, you can publish the views using
-
-```bash
-php artisan vendor:publish --tag=":package_slug-views"
 ```
 
 ## Usage
 
-```php
-$variable = new VendorName\Skeleton();
-echo $variable->echoPhrase('Hello, VendorName!');
+### AI Translation
+
+This package provides a command to translate your language files using ChatGPT. The command will translate all language files from the source language to the target languages.
+
+#### Configuration
+
+First, make sure you have set up your OpenAI API key in your `.env` file:
+
 ```
+OPENAI_API_KEY=your-api-key
+```
+
+You can also configure which translation service to use:
+
+```
+AI_TRANSLATION_DRIVER=chatgpt
+```
+
+The source and target languages are configured directly in the config file. You can modify them by publishing the config file and editing the `languages` section.
+
+#### Running the Translation Command
+
+To translate all language files:
+
+```bash
+php artisan translate:ai
+```
+
+You can also specify the source and target languages directly in the command:
+
+```bash
+php artisan translate:ai --source=en --target=uk,de,fr
+```
+
+By default, the command will skip files that already exist. If you want to force overwrite existing translations, use the `--force` option:
+
+```bash
+php artisan translate:ai --force
+```
+
+#### Supported File Formats
+
+The translation command supports the following file formats:
+- JSON language files (e.g., `en.json`)
+- PHP language files (e.g., `resources/lang/en/messages.php`)
+
+The translator will maintain the structure of the original files, only translating the values and preserving all laravelAiI18ns and placeholders.
 
 ## Testing
 
@@ -85,7 +153,7 @@ Please review [our security policy](../../security/policy) on how to report secu
 
 ## Credits
 
-- [:author_name](https://github.com/:author_username)
+- [Alex Kovalchuk](https://github.com/cargofy)
 - [All Contributors](../../contributors)
 
 ## License
