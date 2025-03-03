@@ -2,8 +2,8 @@
 
 namespace Cargofy\LaravelAiI18n\Commands;
 
-use Illuminate\Console\Command;
 use Cargofy\LaravelAiI18n\Services\TranslationService;
+use Illuminate\Console\Command;
 
 class TranslateCommand extends Command
 {
@@ -39,16 +39,18 @@ class TranslateCommand extends Command
 
         if (empty($sourceLanguage)) {
             $this->error('Source language is not specified. Please set it in the config or use the --source option.');
+
             return self::FAILURE;
         }
 
         if (empty($targetLanguages)) {
             $this->error('Target languages are not specified. Please set them in the config or use the --target option.');
+
             return self::FAILURE;
         }
 
         $this->info("Source language: {$sourceLanguage}");
-        $this->info("Target languages: " . implode(', ', $targetLanguages));
+        $this->info('Target languages: '.implode(', ', $targetLanguages));
         if ($forceOverwrite) {
             $this->warn('Force overwrite is enabled. Existing translations will be overwritten.');
         }
@@ -57,6 +59,7 @@ class TranslateCommand extends Command
         $driver = config('laravel-ai-i18n.driver', 'chatgpt');
         if (empty(config("laravel-ai-i18n.services.{$driver}.api_key"))) {
             $this->error("API key for {$driver} is not set. Please set it in the config or .env file.");
+
             return self::FAILURE;
         }
 
@@ -83,6 +86,7 @@ class TranslateCommand extends Command
 
         if ($stats['failed'] > 0) {
             $this->warn('Some translations failed. Check the logs for more details.');
+
             return self::FAILURE;
         }
 

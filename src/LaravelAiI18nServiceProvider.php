@@ -2,14 +2,11 @@
 
 namespace Cargofy\LaravelAiI18n;
 
-use Spatie\LaravelPackageTools\Package;
-use Spatie\LaravelPackageTools\PackageServiceProvider;
 use Cargofy\LaravelAiI18n\Commands\TranslateCommand;
-use Cargofy\LaravelAiI18n\Services\AbstractTranslationService;
-use Cargofy\LaravelAiI18n\Services\ChatGptTranslationService;
 use Cargofy\LaravelAiI18n\Services\TranslationFileHandler;
 use Cargofy\LaravelAiI18n\Services\TranslationService;
-use Cargofy\LaravelAiI18n\Services\TranslationServiceFactory;
+use Spatie\LaravelPackageTools\Package;
+use Spatie\LaravelPackageTools\PackageServiceProvider;
 
 class LaravelAiI18nServiceProvider extends PackageServiceProvider
 {
@@ -32,7 +29,7 @@ class LaravelAiI18nServiceProvider extends PackageServiceProvider
     {
         // Register the translation services
         $this->app->singleton(TranslationFileHandler::class, function ($app) {
-            return new TranslationFileHandler();
+            return new TranslationFileHandler;
         });
 
         $this->app->singleton(TranslationService::class, function ($app) {

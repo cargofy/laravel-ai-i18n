@@ -7,7 +7,9 @@ use Illuminate\Support\Facades\Log;
 class TranslationService
 {
     protected AbstractTranslationService $translator;
+
     protected TranslationFileHandler $fileHandler;
+
     protected bool $forceOverwrite = false;
 
     public function __construct(TranslationFileHandler $fileHandler)
@@ -23,32 +25,32 @@ class TranslationService
     /**
      * Set whether to force overwrite existing translations
      *
-     * @param bool $force Whether to force overwrite
-     * @return self
+     * @param  bool  $force  Whether to force overwrite
      */
     public function setForceOverwrite(bool $force): self
     {
         $this->forceOverwrite = $force;
+
         return $this;
     }
 
     /**
      * Set the translator service
      *
-     * @param AbstractTranslationService $translator Translator service
-     * @return self
+     * @param  AbstractTranslationService  $translator  Translator service
      */
     public function setTranslator(AbstractTranslationService $translator): self
     {
         $this->translator = $translator;
+
         return $this;
     }
 
     /**
      * Translate all files from source language to target languages
      *
-     * @param string $sourceLanguage Source language code
-     * @param array $targetLanguages Target language codes
+     * @param  string  $sourceLanguage  Source language code
+     * @param  array  $targetLanguages  Target language codes
      * @return array Translation statistics
      */
     public function translateAll(string $sourceLanguage, array $targetLanguages): array
@@ -87,6 +89,7 @@ class TranslationService
             if ($sourceContent === null) {
                 Log::warning("Could not read source file: {$sourceFilePath}");
                 $stats['failed']++;
+
                 continue;
             }
 
@@ -94,10 +97,11 @@ class TranslationService
                 $targetFilePath = $this->fileHandler->getTargetFilePath($sourceFilePath, $sourceLanguage, $targetLanguage);
 
                 // Skip if target file exists and we're not forcing overwrite
-                if (file_exists($targetFilePath) && !$this->forceOverwrite) {
+                if (file_exists($targetFilePath) && ! $this->forceOverwrite) {
                     Log::info("Skipping existing file: {$targetFilePath}");
                     $stats['skipped']++;
                     $stats['by_language'][$targetLanguage]['skipped']++;
+
                     continue;
                 }
 
@@ -108,6 +112,7 @@ class TranslationService
                     Log::error("Failed to translate file: {$sourceFilePath} to {$targetLanguage}");
                     $stats['failed']++;
                     $stats['by_language'][$targetLanguage]['failed']++;
+
                     continue;
                 }
 

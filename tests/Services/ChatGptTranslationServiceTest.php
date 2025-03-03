@@ -20,14 +20,14 @@ it('successfully translates text', function () {
             'choices' => [
                 [
                     'message' => [
-                        'content' => 'Translated text'
-                    ]
-                ]
-            ]
-        ], 200)
+                        'content' => 'Translated text',
+                    ],
+                ],
+            ],
+        ], 200),
     ]);
 
-    $service = new ChatGptTranslationService();
+    $service = new ChatGptTranslationService;
     $result = $service->translate('Text to translate', 'en', 'uk', 'plain');
 
     // Check the result
@@ -51,12 +51,12 @@ it('returns null on API error', function () {
     Http::fake([
         'api.openai.com/v1/chat/completions' => Http::response([
             'error' => [
-                'message' => 'API Error'
-            ]
-        ], 400)
+                'message' => 'API Error',
+            ],
+        ], 400),
     ]);
 
-    $service = new ChatGptTranslationService();
+    $service = new ChatGptTranslationService;
     $result = $service->translate('Text to translate', 'en', 'uk', 'plain');
 
     // Check that result is null on error
@@ -67,7 +67,7 @@ it('returns null when API key is missing', function () {
     // Configure settings without API key
     Config::set('laravel-ai-i18n.services.chatgpt.api_key', '');
 
-    $service = new ChatGptTranslationService();
+    $service = new ChatGptTranslationService;
     $result = $service->translate('Text to translate', 'en', 'uk', 'plain');
 
     // Check that result is null when API key is missing
@@ -86,14 +86,14 @@ it('properly handles JSON format', function () {
   "hello": "Привіт",
   "world": "Світ"
 }
-```'
-                    ]
-                ]
-            ]
-        ], 200)
+```',
+                    ],
+                ],
+            ],
+        ], 200),
     ]);
 
-    $service = new ChatGptTranslationService();
+    $service = new ChatGptTranslationService;
     $result = $service->translate('{"hello":"Hello","world":"World"}', 'en', 'uk', 'json');
 
     // Check that JSON is properly cleaned from markdown
@@ -115,14 +115,14 @@ return [
   "hello" => "Привіт",
   "world" => "Світ"
 ];
-```'
-                    ]
-                ]
-            ]
-        ], 200)
+```',
+                    ],
+                ],
+            ],
+        ], 200),
     ]);
 
-    $service = new ChatGptTranslationService();
+    $service = new ChatGptTranslationService;
     $result = $service->translate('return ["hello" => "Hello", "world" => "World"];', 'en', 'uk', 'php');
 
     // Check that PHP code is properly cleaned from markdown
@@ -138,7 +138,7 @@ it('handles exceptions during request', function () {
         throw new \Exception('Connection error');
     });
 
-    $service = new ChatGptTranslationService();
+    $service = new ChatGptTranslationService;
     $result = $service->translate('Text to translate', 'en', 'uk', 'plain');
 
     // Check that result is null on exception
