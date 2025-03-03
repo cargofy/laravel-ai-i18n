@@ -15,9 +15,9 @@ class ChatGptTranslationService extends AbstractTranslationService
 
     public function __construct()
     {
-        $this->apiKey = config('laravel-ai-i18n.services.chatgpt.api_key');
-        $this->model = config('laravel-ai-i18n.services.chatgpt.model');
-        $this->temperature = config('laravel-ai-i18n.services.chatgpt.temperature');
+        $this->apiKey = (string)config('laravel-ai-i18n.services.chatgpt.api_key');
+        $this->model = (string)config('laravel-ai-i18n.services.chatgpt.model');
+        $this->temperature = (float)config('laravel-ai-i18n.services.chatgpt.temperature');
     }
 
     /**

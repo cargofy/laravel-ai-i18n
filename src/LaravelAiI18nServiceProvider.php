@@ -19,7 +19,8 @@ class LaravelAiI18nServiceProvider extends PackageServiceProvider
          */
         $package
             ->name('laravel-ai-i18n')
-            ->hasConfigFile()
+            ->hasConfigFile('ai-i18n')
+            ->publishesServiceProvider('LaravelAiI18nServiceProvider')
             ->hasCommands([
                 TranslateCommand::class,
             ]);
@@ -37,5 +38,18 @@ class LaravelAiI18nServiceProvider extends PackageServiceProvider
                 $app->make(TranslationFileHandler::class)
             );
         });
+    }
+
+    public function packageBooted(): void
+    {
+        // Публікація конфігураційного файлу
+        $this->publishes([
+            __DIR__.'/../config/ai-i18n.php' => config_path('ai-i18n.php'),
+        ], 'laravel-ai-i18n-config');
+
+        // Публікація сервіс-провайдера
+        $this->publishes([
+            __DIR__.'/LaravelAiI18nServiceProvider.php' => app_path('Providers/LaravelAiI18nServiceProvider.php'),
+        ], 'laravel-ai-i18n-provider');
     }
 }

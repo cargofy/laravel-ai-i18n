@@ -23,13 +23,21 @@ You can install the package via composer:
 composer require cargofy/laravel-ai-i18n
 ```
 
-You can publish the config file with:
+## Публікація ресурсів
+
+Ви можете опублікувати конфігураційний файл за допомогою:
 
 ```bash
 php artisan vendor:publish --tag="laravel-ai-i18n-config"
 ```
 
-This is the contents of the published config file:
+Ви також можете опублікувати сервіс-провайдер для подальшої кастомізації:
+
+```bash
+php artisan vendor:publish --tag="laravel-ai-i18n-provider"
+```
+
+Ось вміст опублікованого конфігураційного файлу:
 
 ```php
 return [
